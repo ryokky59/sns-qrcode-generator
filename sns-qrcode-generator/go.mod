@@ -7,7 +7,7 @@ require (
 	cloud.google.com/go/firestore v1.1.0
 	cloud.google.com/go/storage v1.4.0 // indirect
 	firebase.google.com/go v3.11.1+incompatible // indirect
-	github.com/boombuler/barcode v1.0.0 // indirect
+	github.com/boombuler/barcode v1.0.0
 	github.com/gin-gonic/gin v1.5.0
 	github.com/go-playground/universal-translator v0.17.0 // indirect
 	github.com/golang/groupcache v0.0.0-20191227052852-215e87163ea7 // indirect

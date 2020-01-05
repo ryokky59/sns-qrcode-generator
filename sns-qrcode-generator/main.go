@@ -2,11 +2,15 @@ package main
 
 import (
 	"html/template"
+	"image/png"
 	"log"
 	"net/http"
+	"os"
 	"snsmod/util"
 	"strings"
 
+	"github.com/boombuler/barcode"
+	"github.com/boombuler/barcode/qr"
 	"github.com/gin-gonic/gin"
 )
 
@@ -56,6 +60,57 @@ func setupRouter() *gin.Engine {
 			return
 		}
 		ctx.Redirect(302, "/settings")
+	})
+
+	r.GET("/qrcode/:snstype", func(ctx *gin.Context) {
+		snstype := ctx.Param("snstype")
+		url := ""
+
+		m := util.MySnsData{}
+		m, err := util.GetUserItem()
+		if err != nil {
+			log.Print("An error has occurred: %s\n", err)
+			return
+		}
+
+		switch snstype {
+		case "facebook":
+			url = "https://www.facebook.com/" + m.Facebook
+		case "twitter":
+			url = "twitter://user?screen_name=" + m.Twitter
+		case "instagram":
+			url = "https://www.instagram.com/" + m.Instagram
+		case "line":
+			url = "https://line.me/ti/p/" + m.Line
+		default:
+			log.Print("An error has occurred: %s\n", err)
+			return
+		}
+
+		qrCode, err := qr.Encode(url, qr.L, qr.Auto)
+		if err != nil {
+			log.Print("An error has occurred: %s\n", err)
+			return
+		}
+
+		qrCode, err = barcode.Scale(qrCode, 512, 512)
+		if err != nil {
+			log.Print("An error has occurred: %s\n", err)
+			return
+		}
+
+		file, err := os.Create("./assets/images/qrcode.png")
+		if err != nil {
+			log.Print("An error has occurred: %s\n", err)
+			return
+		}
+		defer file.Close()
+
+		png.Encode(file, qrCode)
+
+		html := template.Must(template.ParseFiles("templates/navbar.html", "templates/qrcode.html"))
+		r.SetHTMLTemplate(html)
+		ctx.HTML(http.StatusOK, "navbar.html", gin.H{})
 	})
 
 	return r
