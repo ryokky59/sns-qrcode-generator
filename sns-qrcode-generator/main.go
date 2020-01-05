@@ -26,6 +26,13 @@ func setupRouter() *gin.Engine {
 		ctx.HTML(http.StatusOK, "navbar.html", gin.H{})
 	})
 
+	r.GET("/mkqrcode", func(ctx *gin.Context) {
+		html := template.Must(template.ParseFiles("templates/navbar.html", "templates/mkqrcode.html"))
+
+		r.SetHTMLTemplate(html)
+		ctx.HTML(http.StatusOK, "navbar.html", gin.H{})
+	})
+
 	return r
 }
 
