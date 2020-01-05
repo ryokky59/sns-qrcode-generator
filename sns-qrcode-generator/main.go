@@ -113,6 +113,15 @@ func setupRouter() *gin.Engine {
 		ctx.HTML(http.StatusOK, "navbar.html", gin.H{})
 	})
 
+	r.POST("/alldiscard", func(ctx *gin.Context) {
+		err := util.AllDiscard()
+		if err != nil {
+			log.Print("An error has occurred: %s\n", err)
+			return
+		}
+		ctx.Redirect(302, "/settings")
+	})
+
 	return r
 }
 

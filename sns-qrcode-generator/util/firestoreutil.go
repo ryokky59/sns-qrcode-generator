@@ -78,3 +78,20 @@ func GetUserItem() (MySnsData, error) {
 
 	return m, nil
 }
+
+// AllDiscard Firestoreのデータを削除する
+func AllDiscard() error {
+	ctx := context.Background()
+
+	client, err := getFireBaseClient(ctx)
+	if err != nil {
+		return err
+	}
+
+	_, err = client.Collection("users").Doc("1").Delete(ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
